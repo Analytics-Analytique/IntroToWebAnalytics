@@ -1,0 +1,158 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Categorization Quiz</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f9f9f9;
+    padding: 20px;
+    color: #333;
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #2c3e50;
+  }
+  .question-box {
+    max-width: 600px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  .progress {
+    text-align: left;
+    font-size: 14px;
+    margin-bottom: 15px;
+    color: #555;
+  }
+  .question-text {
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: normal;
+  }
+  .statement {
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #555;
+ 
+  }
+  .options {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .option {
+    background: #3498db;
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    width: fit-content;
+    transition: background 0.3s ease;
+  }
+  .option:hover {
+    background: #2980b9;
+  }
+  .feedback {
+    margin-top: 15px;
+    font-weight: bold;
+  }
+  .hint {
+    margin-top: 10px;
+    color: #e67e22;
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+<h1>Adobe Analytics Categorization Quiz</h1>
+
+<div class="question-box">
+   <p class="progress" id="progress">Question 1 of 3</p>
+  <p class="question-text">Select the categorization for:</p>
+  <p class="statement" id="question">
+    Provides context—descriptive attributes such as page title, device type, or geography
+  </p>
+  <div class="options" id="options">
+    <div class="option" onclick="checkAnswer('Metric')">Metric</div>
+    <div class="option" onclick="checkAnswer('Dimension')">Dimension</div>
+    <div class="option" onclick="checkAnswer('Conversion')">Conversion</div>
+  </div>
+  <p class="feedback" id="feedback"></p>
+  <p class="hint" id="hint"></p>
+</div>
+
+<script>
+const questions = [
+  {
+    text: "Provides context—descriptive attributes such as page title, device type, or geography",
+    correct: "Dimension",
+    hints: {
+      Metric: "Metrics are numbers that measure quantities, not descriptive attributes.",
+      Conversion: "Testing... testing... 1,2,3",
+    }
+  },
+  {
+    text: "Are quantitative measures—numbers that indicate performance",
+    correct: "Metric",
+    hints: {
+      Dimension: "Dimensions describe data, not measure it.",
+      Conversion: "Analytics for dummies, look it up",
+    }
+  },
+  {
+    text: "Represents a desired action taken by a visitor (e.g., form submission, video play)",
+    correct: "Conversion",
+    hints: {
+      Metric: "Metrics measure performance, but conversions represent specific actions.",
+      Dimension: "Re-read the text, you shoul no better at this point",
+    }
+  }
+];
+
+let currentQuestion = 0;
+
+function checkAnswer(selected) {
+  const feedback = document.getElementById('feedback');
+  const hintBox = document.getElementById('hint');
+  if (selected === questions[currentQuestion].correct) {
+    feedback.style.color = 'green';
+    feedback.textContent = 'Correct!';
+    hintBox.textContent = '';
+    setTimeout(() => {
+      currentQuestion++;
+      if (currentQuestion < questions.length) {
+        loadQuestion();
+      } else {
+        document.getElementById('question').innerHTML = "🎉 You've completed the exercise!";
+        document.getElementById('options').style.display = 'none';
+        feedback.textContent = '';
+        document.getElementById('progress').textContent = '';
+      }
+    }, 1000);
+  } else {
+    feedback.style.color = 'red';
+    feedback.textContent = 'Incorrect. Try again!';
+    hintBox.textContent = questions[currentQuestion].hints[selected] || "Think about what this term means.";
+  }
+}
+
+function loadQuestion() {
+  document.getElementById('question').innerHTML = questions[currentQuestion].text;
+  document.getElementById('feedback').textContent = '';
+  document.getElementById('hint').textContent = '';
+  document.getElementById('progress').textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
+}
+</script>
+</body>
+</html>
