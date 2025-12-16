@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Drag & Drop Matching Exercise</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: #f9f9f9;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+  }
+  h2 {
+    text-align: center;
+    color: #2c3e50;
+  }
+  .container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 30px;
+    flex-wrap: wrap;
+  }
+  .list {
+    width: 45%;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    padding: 15px;
+    min-height: 250px;
+  }
+  .list h3 {
+    text-align: center;
+    margin-bottom: 10px;
+    color: #34495e;
+  }
+  .item {
+    padding: 10px;
+    margin: 8px 0;
+    background: #3498db;
+    color: #fff;
+    border-radius: 6px;
+    cursor: grab;
+    text-align: center;
+    font-weight: bold;
+    transition: transform 0.2s ease;
+  }
+  .item:active {
+    transform: scale(1.05);
+  }
+  .dropzone {
+    border: 2px dashed #bbb;
+    border-radius: 6px;
+    padding: 15px;
+    margin: 10px 0;
+    background: #f0f0f0;
+    transition: background-color 0.3s ease;
+  }
+  .dropzone.correct {
+    background-color: #c8e6c9; /* green */
+  }
+  .dropzone.incorrect {
+    background-color: #ffcdd2; /* red */
+  }
+  #result {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background: #27ae60;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  button:hover {
+    background: #2ecc71;
+  }
+</style>
+</head>
+<body>
+<h2>Match the Words with Their Definitions</h2>
+<div class="container">
+  <div class="list" id="words">
+    <h3>Words</h3>
+    <div class="item" draggable="true" id="word1">Metric</div>
+    <div class="item" draggable="true" id="word2">Dimension</div>
+    <div class="item" draggable="true" id="word3">Conversion</div>
+  </div>
+  <div class="list" id="definitions">
+    <h3>Definitions</h3>
+    <div class="dropzone" data-match="word1">Numbers that measure quantities</div>
+    <div class="dropzone" data-match="word2">Descriptive values in reports</div>
+    <div class="dropzone" data-match="word3">Desired action taken by a visitor</div>
+  </div>
+</div>
+<button onclick="checkAnswers()">Check Answers</button>
+<p id="result"></p>
+
+<script>
+  const items = document.querySelectorAll('.item');
+  const zones = document.querySelectorAll('.dropzone');
+  let draggedItem = null;
+
+  items.forEach(item => {
+    item.addEventListener('dragstart', () => draggedItem = item);
+    item.addEventListener('dragend', () => draggedItem = null);
+  });
+
+  zones.forEach(zone => {
+    zone.addEventListener('dragover', e => e.preventDefault());
+    zone.addEventListener('drop', () => {
+      if (draggedItem) {
+        zone.appendChild(draggedItem);
+      }
+    });
+  });
+
+  function checkAnswers() {
+    let correctCount = 0;
+    zones.forEach(zone => {
+      const child = zone.querySelector('.item');
+      if (child && child.id === zone.dataset.match) {
+        zone.classList.add('correct');
+        zone.classList.remove('incorrect');
+        correctCount++;
+      } else {
+        zone.classList.add('incorrect');
+        zone.classList.remove('correct');
+      }
+    });
+    document.getElementById('result').textContent = `You got ${correctCount} out of ${zones.length} correct!`;
+  }
+</script>
+</body>
+</html>
